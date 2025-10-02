@@ -34,6 +34,25 @@ app.get("/usuarios", (req, res) => {
   });
 });
 
+// 🔹 Ruta de login
+app.post("/login", (req, res) => {
+  const { nombre, contraseña } = req.body; // usa los nombres de tus columnas reales
+
+  db.query(
+    "SELECT * FROM usuarios WHERE nombre = ? AND contraseña = ?",
+    [nombre, contraseña],
+    (err, results) => {
+      if (err) return res.status(500).json({ error: err });
+      if (results.length > 0) {
+        res.json({ success: true, message: "Login correcto" });
+      } else {
+        res.json({ success: false, message: "Login incorrecto" });
+      }
+    }
+  );
+});
+
+
 // 🔹 Iniciar servidor
 app.listen(3001, () => {
   console.log("Servidor corriendo en http://localhost:3001");
