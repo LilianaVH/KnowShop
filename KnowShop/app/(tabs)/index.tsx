@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { useRouter } from "expo-router";
+import { Platform } from "react-native";
+
+const BASE_URL =
+  Platform.OS === "web"
+    ? "http://localhost:3001" // para la versión web
+    : "https://braggadocian-tomiko-extollingly.ngrok-free.dev"; // para celular
 
 export default function LoginScreen() {
   const [usuario, setUsuario] = useState("");
@@ -9,7 +15,7 @@ export default function LoginScreen() {
 
   const handleLogin = async () => {
     try {
-      const res = await fetch("http://localhost:3001/login", {
+      const res = await fetch(`${BASE_URL}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ usuario, contrasena }), // 👈 nombres correctos

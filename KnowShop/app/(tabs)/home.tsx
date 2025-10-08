@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, ScrollView, View, Text, Image } from "react-native";
 import { Table, Row } from "react-native-table-component";
+import { Platform } from "react-native";
+
+const BASE_URL =
+  Platform.OS === "web"
+    ? "http://localhost:3001" // para la versión web
+    : "https://braggadocian-tomiko-extollingly.ngrok-free.dev"; // para celular
+
 
 type Anuncio = {
   numero: number;
@@ -14,7 +21,7 @@ export default function Home() {
   useEffect(() => {
     const fetchAnuncios = async () => {
       try {
-        const res = await fetch("http://localhost:3001/anuncios"); // ⚠️ cambia por tu IP o localhost
+        const res = await fetch(`${BASE_URL}/anuncios`); // ⚠️ cambia por tu IP o localhost
         const data: Anuncio[] = await res.json();
         setAnuncios(data);
       } catch (err) {
