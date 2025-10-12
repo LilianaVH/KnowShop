@@ -148,5 +148,3 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
-message.txt
-4 KB
