@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, ScrollView, View, Text, Image } from "react-native";
+import { StyleSheet, ScrollView, View, Text, Image, TouchableOpacity, Platform } from "react-native";
 import { Table, Row } from "react-native-table-component";
-import { Platform } from "react-native";
-
-const BASE_URL =
-  Platform.OS === "web"
-    ? "http://localhost:3001" // para la versión web
-    : "https://braggadocian-tomiko-extollingly.ngrok-free.dev"; // para celular
-
+import { useRouter } from "expo-router";
 
 type Anuncio = {
   numero: number;
@@ -17,15 +11,23 @@ type Anuncio = {
 
 export default function Home() {
   const [anuncios, setAnuncios] = useState<Anuncio[]>([]);
+  const router = useRouter();
 
+  // 🌐 Cambia automáticamente según la plataforma
+  const BASE_URL =
+    Platform.OS === "web"
+      ? "http://localhost:3001"
+      : "https://braggadocian-tomiko-extollingly.ngrok-free.dev";
+
+  // 🔹 Obtener anuncios desde MySQL
   useEffect(() => {
     const fetchAnuncios = async () => {
       try {
-        const res = await fetch(`${BASE_URL}/anuncios`); // ⚠️ cambia por tu IP o localhost
+        const res = await fetch(`${BASE_URL}/anuncios`);
         const data: Anuncio[] = await res.json();
         setAnuncios(data);
       } catch (err) {
-        console.error("Error al obtener anuncios:", err);
+        console.error("🚨 Error al obtener anuncios:", err);
       }
     };
 
@@ -36,10 +38,10 @@ export default function Home() {
     <View style={styles.container}>
       {/* 🔹 Contenedor central */}
       <View style={styles.content}>
-        {/* 🔹 Título arriba de la tabla */}
+        {/* 🔹 Título */}
         <Text style={styles.title}>📋 Lista de Anuncios</Text>
 
-        {/* 🔹 Tabla */}
+        {/* 🔹 Tabla de anuncios */}
         <ScrollView horizontal>
           <View style={styles.tableWrapper}>
             <Table borderStyle={{ borderWidth: 1, borderColor: "#ccc" }}>
@@ -70,6 +72,14 @@ export default function Home() {
           </View>
         </ScrollView>
       </View>
+
+      {/* 🔹 Botón flotante CRUD */}
+      <TouchableOpacity
+        style={styles.crudButton}
+        onPress={() => router.push("/edit")}
+      >
+        <Text style={styles.crudButtonText}>CRUD</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -78,11 +88,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    justifyContent: "center", // centra verticalmente todo el contenido
-    alignItems: "center", // centra horizontalmente todo
+    justifyContent: "center",
+    alignItems: "center",
   },
   content: {
-    alignItems: "center", // centra tabla + título
+    alignItems: "center",
+    marginTop: 40,
   },
   title: {
     fontSize: 26,
@@ -117,4 +128,25 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignSelf: "center",
   },
+  crudButton: {
+    position: "absolute",
+    bottom: 40,
+    right: 30,
+    backgroundColor: "#007bff",
+    paddingVertical: 15,
+    paddingHorizontal: 25,
+    borderRadius: 50,
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+  },
+  crudButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
 });
+message.txt
+4 KB
